@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIP Image Search Engine</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            background: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        h1 span {
+            color: var(--secondary);
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #searchQuery {
+            width: 100%;
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            background: white;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        #searchQuery:focus {
+            outline: none;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .search-button {
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 25px;
+            background: var(--secondary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .voice-button {
+            padding: 1rem;
+            background: #e74c3c;
+            color: white;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-button:hover {
+            background: #c0392b;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .image-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--light);
+        }
+
+        .image-label {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .search-box {
+                margin-bottom: 2rem;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-button {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+
+            .voice-button {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 CLIP <span>Image Search</span></h1>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchQuery" placeholder="Search for images using natural language...">
+            <button class="search-button" onclick="performSearch()">Search</button>
+            <button class="voice-button" onclick="startVoiceSearch()">🎙️</button>
+        </div>
+
+        <div class="loader">
+            <div class="spinner"></div>
+        </div>
+
+        <div id="results" class="image-grid"></div>
+    </div>
+
+    <script>
+        let recognition;
+        let isRecognizing = false;
+
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                isRecognizing = true;
+                document.querySelector('.voice-button').style.background = '#f39c12';
+            };
+
+            recognition.onend = () => {
+                isRecognizing = false;
+                document.querySelector('.voice-button').style.background = '#e74c3c';
+            };
+
+            recognition.onresult = (event) => {
+                const query = event.results[0][0].transcript;
+                document.getElementById('searchQuery').value = query;
+                performSearch();
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error', event.error);
+                alert('Sorry, there was an error with speech recognition.');
+            };
+        }
+
+        function startVoiceSearch() {
+            if (isRecognizing) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchQuery').value;
+            const loader = document.querySelector('.loader');
+            const results = document.getElementById('results');
+            
+            loader.style.display = 'block';
+            results.innerHTML = '';
+
+            fetch('/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                data.top_images.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'image-card';
+                    card.innerHTML = `
+                        <img src="/static/Images/${item.image}" alt="Search result ${index + 1}">
+                        <div class="image-label">Match #${item.label}</div>
+                    `;
+                    results.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                results.innerHTML = '<p style="text-align:center; color:red">Error loading results. Please try again.</p>';
+            })
+            .finally(() => {
+                loader.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
