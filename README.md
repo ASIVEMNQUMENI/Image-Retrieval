@@ -19,11 +19,11 @@ the Application:
 python run. py
 7. Access the Application:
 - Open a browser and navigate to http://127.0.0.1:5000.
-â€¢ Text-Based Search:
+Text-Based Search:
 1. Enter a text query in the search box
 2. Click Search.
 3. The system will display the top 5 most similar images.
-â€¢ Voice-Based Search:
+Voice-Based Search:
 1. Click the Voice Search button.
 2. Speak your query into the microphone (e.g.,
 "show me a beach').
