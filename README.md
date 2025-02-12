@@ -4,12 +4,14 @@ Prerequisites:
 - Visual Studio Code
 Steps to Run the Project
 1. Clone the Repository: git clone < GitHub> cd image_retrieval_system
-2. Set Up a Virtual Environment: python -m venv
-3. Activate the Virtual Environment:
+2. Open the terminal.
+3. Set Up a Virtual Environment: python -m venv venv
+4. Activate the Virtual Environment:
 - On Windows:
-• \venv\Scripts\activate
+    venv\Scripts\activate
 4. Install Dependencies:
 pip install -r requirements.txt
+pip install python-certifi-win32
 5. Add Images to the Dataset:
 - Place your images in the
 •static/Images/
@@ -17,8 +19,7 @@ folder.
 6. Run
 the Application:
 python run. py
-7. Access the Application:
-- Open a browser and navigate to http://127.0.0.1:5000.
+
 Text-Based Search:
 1. Enter a text query in the search box
 2. Click Search.
