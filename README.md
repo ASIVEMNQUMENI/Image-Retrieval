@@ -1,4 +1,4 @@
-Instructions
+*Instructions*
 Prerequisites:
 - Python 3.10
 - Visual Studio Code
@@ -18,7 +18,7 @@ pip install python-certifi-win32
 folder.
 6. Run
 the Application:
-python run. py
+python run.py
 
 Text-Based Search:
 1. Enter a text query in the search box
