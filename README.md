@@ -11,11 +11,12 @@ Ensure you have the following installed before running the project:
 
 ### 1. Clone the Repository
 ```sh
-git clone <GitHub Repository URL>
+git clone https://github.com/ASIVEMNQUMENI/Image-Retrieval.git
 cd image_retrieval_system
 ```
 
 ### 2. Set Up a Virtual Environment
+open the terminal
 ```sh
 python -m venv venv
 ```
@@ -88,5 +89,4 @@ pyttsx3==2.90
 
 ---
 
-### **Happy Coding! 🚀**
 
