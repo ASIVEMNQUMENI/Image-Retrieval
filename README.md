@@ -6,13 +6,14 @@ Ensure you have the following installed before running the project:
 
 - **Python**: 3.10
 - **Visual Studio Code**
+- **Git**
 
 ## Steps to Run the Project
 
 ### 1. Clone the Repository
 ```sh
 git clone https://github.com/ASIVEMNQUMENI/Image-Retrieval.git
-cd image_retrieval_system
+cd Image-Retrieval
 ```
 
 ### 2. Set Up a Virtual Environment
