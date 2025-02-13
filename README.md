@@ -40,17 +40,11 @@ pip install -r requirements.txt
 pip install python-certifi-win32
 ```
 
-### 5. Add Images to the Dataset
-Make sure you've got images in the following folder: (I've put 500 for demontration)
-```
-/static/Images/
-```
-
-### 6. Run the Application
+### 5. Run the Application
 ```sh
 python run.py
 ```
-
+This will trigger the browser to open automatically
 ---
 
 ## Features
