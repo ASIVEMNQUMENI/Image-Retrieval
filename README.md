@@ -35,11 +35,13 @@ python -m venv venv
 ### 4. Install Dependencies
 ```sh
 pip install -r requirements.txt
+```
+```sh
 pip install python-certifi-win32
 ```
 
 ### 5. Add Images to the Dataset
-Place your images in the following folder:
+Make sure you've got images in the following folder: (I've put 500 for demontration)
 ```
 /static/Images/
 ```
