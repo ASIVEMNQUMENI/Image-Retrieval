@@ -2,7 +2,9 @@ Flask==3.0.0
 transformers==4.35.0
 torch==2.1.0
 Pillow==10.0.1
+PyAudio
 numpy==1.26.0
 scikit-learn==1.3.0
 SpeechRecognition==3.10.0
 pyttsx3==2.90
+python-certifi-win32

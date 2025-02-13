@@ -147,6 +147,29 @@
             color: var(--primary);
         }
 
+        .image-caption {
+            padding: 0.5rem 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .speech-button {
+            display: block;
+            margin: 0.5rem auto;
+            padding: 0.5rem 1rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .speech-button:hover {
+            background: #2980b9;
+        }
+
         .loader {
             display: none;
             text-align: center;
@@ -258,6 +281,14 @@
             }
         }
 
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1; // Speed of speech
+            utterance.pitch = 1; // Pitch of speech
+            window.speechSynthesis.speak(utterance);
+        }
+
         function performSearch() {
             const query = document.getElementById('searchQuery').value;
             const loader = document.querySelector('.loader');
@@ -279,9 +310,20 @@
                     card.innerHTML = `
                         <img src="/static/Images/${item.image}" alt="Search result ${index + 1}">
                         <div class="image-label">Match #${item.label}</div>
+                        <div class="image-caption">${item.caption}</div>
+                        <button class="speech-button" onclick="speakText('${item.caption.replace(/'/g, "\\'")}')">🔊 Play Caption</button>
                     `;
                     results.appendChild(card);
                 });
+
+                // Automatically play captions after 5 seconds
+                setTimeout(() => {
+                    data.top_images.forEach((item, index) => {
+                        setTimeout(() => {
+                            speakText(item.caption);
+                        }, index * 6000); // 6-second delay between captions (5s + 1s buffer)
+                    });
+                }, 5000); // 5-second delay after images load
             })
             .catch(error => {
                 console.error('Error:', error);
