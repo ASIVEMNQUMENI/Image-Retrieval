@@ -44,7 +44,7 @@ pip install python-certifi-win32
 ```sh
 python run.py
 ```
-This will trigger the browser to open automatically
+That will trigger the browser to open automatically
 ---
 
 ## Features
